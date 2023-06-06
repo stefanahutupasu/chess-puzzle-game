@@ -1,0 +1,219 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #FF8484;
+    flex-direction: row; /* Change the direction to row */
+    flex-wrap: wrap; /* If the screen is too small, move the elements to a new line */
+}
+
+
+body, div, img {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+#chessboard {
+    position: fixed;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 0;
+    width: 72vh; /* Adjust size as needed */
+    height: 72vh; /* Adjust size as needed */
+    border-radius: 15px; /* Adjust as needed */
+    box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.4); /* Adjust as needed */
+    overflow: hidden; /* To ensure the inner squares don't spill over the rounded corners */
+    
+}
+
+#chessboard-empty {
+    position: fixed;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 0;
+    width: 72vh; /* Adjust size as needed */
+    height: 72vh; /* Adjust size as needed */
+    border-radius: 15px; /* Adjust as needed */
+    box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.4); /* Adjust as needed */
+    overflow: hidden; /* To ensure the inner squares don't spill over the rounded corners */
+    z-index: -20;
+    
+}
+
+button.promotion-button, .square, .square-fake {
+    width: 100%;
+    height: 100%;
+    min-width: 9vh;  /* adjust this value based on your design */
+    min-height: 9vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    user-select: none;
+  
+}
+
+
+
+button.promotion-button {
+    border: 0;
+    background: none;
+}
+
+button.light, .square.light, .square-fake.light {
+    background-color: #4DCCBD;
+}
+
+button.dark, .square.dark,  .square-fake.dark {
+    background-color: #2374AB;
+}
+
+.square.light.highlight {
+    background-color: #FFC914; /* Semi-transparent yellow */
+}
+
+.square.dark.highlight {
+    background-color: #EF8354; /* Semi-transparent yellow */
+}
+
+
+.piece {
+    position: absolute; 
+    width: 7vh;
+    height: 7vh;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    user-select: none;
+    cursor: pointer;
+
+}
+
+.piece.white {
+    filter: invert(100%) sepia(7%) saturate(5765%) hue-rotate(69deg) brightness(99%) contrast(122%) drop-shadow(0 1px 5px rgba(0, 0, 0, 0.3));
+}
+
+.piece.black {
+    filter: invert(10%) sepia(21%) saturate(6820%) hue-rotate(241deg) brightness(89%) contrast(101%) drop-shadow(0 1px 5px rgba(0, 0, 0, 0.3));
+}
+
+
+
+
+
+.placeholder {
+    visibility: hidden;
+    width: 7vh;
+    height: 7vh;
+}
+
+
+.invisible {
+    visibility: hidden;
+}
+
+
+.promotion-popup {
+    position: relative;
+    
+    left: 45vh;
+
+    background: linear-gradient(to bottom, #4DCCBD, #2374AB);
+    padding: 1vh;
+    border-radius: 15px; /* Adjust as needed */
+    box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.4); /* Adjust as needed */
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+
+    
+}
+
+
+
+
+.promotion-popup button {
+    margin: 10px 0;
+}
+
+#turn-display {
+    width: 30vh;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 4vh;  /* Adjust as needed */
+    font-size: 3vh;  /* Adjust as needed */
+    font-family: 'Raleway', sans-serif;
+    top: 3vh;
+    color: #D6FFF6;  /* Adjust as needed */
+    font-weight: lighter;
+    
+    z-index: 10;
+    user-select: none;
+    padding: 1vh;
+   
+    border-radius: 10px; /* Adjust as needed */
+    box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.3); /* Adjust as needed */
+    background: linear-gradient( #4DCCBD, #2374AB);
+    
+}
+
+#info-display {
+    width: auto;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 4vh;  /* Adjust as needed */
+    font-size: 3vh;  /* Adjust as needed */
+    font-family: 'Raleway', sans-serif;
+    bottom: 3vh;
+    color: #D6FFF6;  /* Adjust as needed */
+    font-weight: lighter;
+    
+    z-index: 10;
+    user-select: none;
+    padding: 1vh;
+   
+    border-radius: 10px; /* Adjust as needed */
+    box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.3); /* Adjust as needed */
+    background: linear-gradient( #4DCCBD, #2374AB);
+    
+}
+
+
+#generate-puzzle {
+
+    width: auto;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 5vh;  /* Adjust as needed */
+    font-size: 3vh;  /* Adjust as needed */
+    font-family: 'Raleway', sans-serif;
+   
+    color: #D6FFF6;  /* Adjust as needed */
+    font-weight: lighter;
+    top: 14vh;
+    margin-right: 110vh;
+    z-index: 10;
+    user-select: none;
+    padding: 1vh;
+    border: #2374AB;
+    border-radius: 10px; /* Adjust as needed */
+    box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.3); /* Adjust as needed */
+    background: linear-gradient( #4DCCBD, #2374AB);
+    transition-duration: 0.4s;
+}
+
+
+#generate-puzzle:hover {
+    background: linear-gradient( #86fff1, #5fbfff);; /* Green */
+    color: #231651;
+}
