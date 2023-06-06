@@ -1,23 +1,24 @@
 import { Piece } from './piece2.js';
+import { BoardState } from './boardstate.js';
 
 export class Chessboard {
     constructor(elementId, initialConfiguration, initialColors, initialTurn) {
         this.boardElement = document.getElementById(elementId);
-        this.initialConfiguration = initialConfiguration;
-        this.initialColors = initialColors;
+        this.boardState = new BoardState(initialConfiguration, initialColors);
         this.pieces = [];
         this.populateBoard();
+        
         document.addEventListener('mouseup', this.handleMouseup.bind(this));
         this.pieces.forEach(piece => {
             piece.registerObserver(this);
         });
+
         this.lastMove = null; // { piece: Piece, from: Square, to: Square }
         this.turn = initialTurn;
-
         this.displayTurn();
         this.promotionTime = false;
-
     }
+
 
     displayTurn() {
         let turnElement = document.getElementById('turn-display');
@@ -36,13 +37,13 @@ export class Chessboard {
         else turnElement.innerHTML = `Promote your pawn.`;
     }
 
+
     switchTurn() {
         if(!this.promotionTime)
         this.turn = this.turn === 'white' ? 'black' : 'white';
-
-        
         this.displayTurn();
     }
+
 
     update(piece, fromSquare, toSquare) {
         // Parse the coordinates as integers
@@ -58,27 +59,17 @@ export class Chessboard {
     
         console.log(`The ${piece.color} ${piece.type} has moved from square ${fromSquare.row},${fromSquare.col} to ${toSquare.row},${toSquare.col}`);
         this.lastMove = { piece, from: fromSquare, to: toSquare };
-        console.log(this.lastMove);
-
-        // Update the pieces matrix
-        this.initialConfiguration[fromRow - 1][fromCol - 1] = 'empty';
-        this.initialConfiguration[toRow - 1][toCol - 1] = piece.type;
-    
-        // Update the colors matrix
-        this.initialColors[fromRow - 1][fromCol - 1] = 'empty';
-        this.initialColors[toRow - 1][toCol - 1] = piece.color;
+        this.boardState.movePiece(fromRow - 1, fromCol - 1, toRow - 1, toCol - 1);
     }
     
-
 
     populateBoard() {
         for (let row = 0; row < 8; row++) {
             for (let col = 0; col < 8; col++) {
-                const pieceName = this.initialConfiguration[row][col];
+                const pieceName = this.boardState.getPieceAt(row, col);
                 let piece = null;
                 if (pieceName !== 'empty') {
-                    //const color = row < 2 ? 'black' : 'white';
-                    const color = this.initialColors[row][col];
+                    const color = this.boardState.getColorAt(row, col);
                     piece = new Piece(pieceName, color, row, col);
                     this.pieces.push(piece);
                 }
@@ -88,6 +79,7 @@ export class Chessboard {
             }
         }
     }
+
 
     createSquare(row, col, pieceElement) {
         const square = document.createElement('div');
@@ -101,11 +93,13 @@ export class Chessboard {
         return square;
     }
 
+
     handleMouseup() {
         this.pieces.forEach(piece => {
             piece.deselect();
         });
     }
+
 
     handleSquareMouseup(e) {
         e.preventDefault();
@@ -119,10 +113,7 @@ export class Chessboard {
                 return;
             }
             
-
-
-        
-            if (selectedPiece.isValidMove(toSquare, this.initialConfiguration, this.initialColors, this.lastMove))  {
+            if (selectedPiece.isValidMove(toSquare, this.boardState, this.lastMove))  {
                 
                 let targetPiece = this.pieces.find(piece => {
                     const pieceSquare = {row: parseInt(piece.element.parentElement.dataset.row), col: parseInt(piece.element.parentElement.dataset.col)};
@@ -153,37 +144,26 @@ export class Chessboard {
                 if (selectedPiece.type === 'pawn') {
                     if ((selectedPiece.color === 'white' && toSquare.row === 1) || (selectedPiece.color === 'black' && toSquare.row === 8)) {
                         this.handlePromotion(selectedPiece);
-
-                        // let turnElement = document.getElementById('turn-display');
-                        // turnElement.textContent = "Promote your pawn.";
-                        // // Change the color based on the color of the pawn
-                        // if(selectedPiece.color == 'white') {
-                        //     turnElement.style.color = "#D6FFF6"; // color for white
-                        // } else {
-                        //     turnElement.style.color = "#231651"; // color for black
-                        // }
                         console.log("promotion time");
                     }
-            }
-
+                }   
             this.switchTurn();
+            }   
         }
     }
-    }
+
 
     getKing(color) {
         return this.pieces.find(piece => piece.type === 'king' && piece.color === color);
     }
     
+
     cloneState() {
-        // Using map() with the spread operator to create a deep copy of the 2D arrays
-        const clonedConfig = this.initialConfiguration.map(row => [...row]);
-        const clonedColors = this.initialColors.map(row => [...row]);
-        return { clonedConfig, clonedColors };
+        return this.boardState.clone();
     }
     
     applyMoveToState(piece, fromSquare, toSquare, clonedState) {
-        const { clonedConfig, clonedColors } = clonedState;
+        
         let clonedPieces = [...this.pieces];
         const fromRow = parseInt(fromSquare.row) - 1;
         const fromCol = parseInt(fromSquare.col) - 1;
@@ -191,14 +171,13 @@ export class Chessboard {
         const toCol = parseInt(toSquare.col) - 1;
         
         // Check for normal capture
-        if (clonedConfig[toRow][toCol] !== 'empty') {
-            const capturedPieceIndex = clonedPieces.findIndex(p => p.type === clonedConfig[toRow][toCol] && p.color !== piece.color && p.element.parentElement.dataset.row == toSquare.row && p.element.parentElement.dataset.col == toSquare.col);
+        if(clonedState.getPieceAt(fromRow, fromCol) !== 'empty') {
+            const capturedPieceIndex = clonedPieces.findIndex(p => p.type === clonedState.getPieceAt(toRow,toCol) 
+                && p.color !== piece.color && p.element.parentElement.dataset.row == toSquare.row && p.element.parentElement.dataset.col == toSquare.col);
             if (capturedPieceIndex > -1) {
                 const capturedPiece = clonedPieces[capturedPieceIndex];
                 console.log(`A ${capturedPiece.color} ${capturedPiece.type} would be captured virtually.`);
                 clonedPieces.splice(capturedPieceIndex, 1);
-                clonedConfig[toRow][toCol] = 'empty';
-                clonedColors[toRow][toCol] = 'empty';
             }
         }
         
@@ -218,20 +197,17 @@ export class Chessboard {
             }
         }
     
-        clonedConfig[fromRow][fromCol] = 'empty';
-        clonedConfig[toRow][toCol] = piece.type;
-        clonedColors[fromRow][fromCol] = 'empty';
-        clonedColors[toRow][toCol] = piece.color;
-       // console.log(clonedPieces);
-        return { clonedConfig, clonedColors, clonedPieces };
+        clonedState.movePiece(fromRow, fromCol, toRow, toCol);
+        return { clonedState, clonedPieces };
     }
     
+
     isSquareAttacked(square, color, state) {
         console.log(state.clonedPieces);
         const opponentColor = color === 'white' ? 'black' : 'white';
         const opponentPieces = state.clonedPieces.filter(piece => piece.color === opponentColor);
         for (let i = 0; i < opponentPieces.length; i++) {
-            if (opponentPieces[i].isValidMove(square, state.clonedConfig, state.clonedColors, this.lastMove)) {
+            if (opponentPieces[i].isValidMove(square, state.clonedState, this.lastMove)) {
                 console.log(`King is attacked by ${opponentPieces[i].color} ${opponentPieces[i].type}`);
                 return true;
             }
@@ -239,12 +215,13 @@ export class Chessboard {
         return false;
     }
     
+
     isMoveSafe(selectedPiece, toSquare, turn) {
         // Create a copy of the current game state
         let clonedState = this.cloneState();
     
         // Apply the move to the copied game state
-        clonedState = this.applyMoveToState(selectedPiece, selectedPiece.fromSquare, toSquare, clonedState);
+        let clonedStateAndPieces = this.applyMoveToState(selectedPiece, selectedPiece.fromSquare, toSquare, clonedState);
     
         // Get the king
         const king = this.getKing(turn);
@@ -254,29 +231,23 @@ export class Chessboard {
     
         // If the move puts the king in check, or if the moving piece is the king and the destination is attacked, the move isn't safe
         if (selectedPiece.type === 'king') {
-            return !this.isSquareAttacked(toSquare, turn, clonedState);
+            return !this.isSquareAttacked(toSquare, turn, clonedStateAndPieces);
         } else {
-            return !this.isSquareAttacked(kingSquare, turn, clonedState);
+            return !this.isSquareAttacked(kingSquare, turn, clonedStateAndPieces);
         }
     }
     
     
-
     handlePromotion(pawn) {
         // Create the popup
         this.promotionTime = true;
         const promotionPopup = document.createElement('div');
         promotionPopup.className = 'promotion-popup';
-        //promotionPopup.appendChild(new Text("promote"));
-    
         // Create buttons for each piece
         const pieces = ['queen', 'rook', 'bishop', 'knight'];
         pieces.forEach(piece => {
             const button = document.createElement('button');
             button.classList.add("promotion-button");
-            // if(pawn.color == "black")
-            // button.classList.add("light");
-            // Create an img element for the piece
             const pieceImg = document.createElement('img');
             pieceImg.src = `img/${piece}.png`; // Replace with the actual path to the image
             pieceImg.alt = piece;
@@ -308,10 +279,6 @@ export class Chessboard {
         pawn.element.src = `img/${piece}.png`;
         
         pawn.setMoveStrategy(pawn.type);
-        //console.log(pawn);
     }
     
-
-
-
 }

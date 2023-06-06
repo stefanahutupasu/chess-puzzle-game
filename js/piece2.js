@@ -42,16 +42,16 @@ export class Piece {
             case 'king':
                 this.moveStrategy = new KingMoveStrategy(this.color);
                 break;
-            // ...handle other types similarly
+            
             default:
                 this.moveStrategy = new PawnMoveStrategy(this.color);
                 break;
         }
     }
 
-    isValidMove(toSquare, initialConfiguration, initialColors, lastMove) {
+    isValidMove(toSquare, boardState, initialColors, lastMove) {
         const fromSquare = {row: parseInt(this.element.parentElement.dataset.row), col: parseInt(this.element.parentElement.dataset.col)};
-        return this.moveStrategy.isValidMove(fromSquare, toSquare, initialConfiguration, initialColors, lastMove);
+        return this.moveStrategy.isValidMove(fromSquare, toSquare, boardState.configuration, boardState.colors, lastMove);
     }
     
 
@@ -92,7 +92,7 @@ export class Piece {
         for (let row = 1; row <= 8; row++) {
             for (let col = 1; col <= 8; col++) {
                 const toSquare = { row: row, col: col };
-                if (this.isValidMove(toSquare, this.observers[0].initialConfiguration, this.observers[0].initialColors, this.observers[0].lastMove)
+                if (this.isValidMove(toSquare, this.observers[0].boardState, this.observers[0].lastMove)
                 && this.observers[0].isMoveSafe(this, toSquare, this.color)) {
                
                     const squareElement = document.querySelector(`.square[data-row='${row}'][data-col='${col}']`);
@@ -103,7 +103,7 @@ export class Piece {
     }
     
     clearHighlights() {
-        // Assuming all squares have the 'square' class
+        
         const squares = document.getElementsByClassName('square');
         for (let i = 0; i < squares.length; i++) {
             squares[i].classList.remove('highlight');
