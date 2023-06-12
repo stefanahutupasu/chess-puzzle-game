@@ -1,5 +1,6 @@
 import { Chessboard } from './chessboard2.js';
-
+import { PuzzleMove } from './puzzlemove.js';
+import { parseMoveStringsHandler} from './move_string_handler.js';
 
 
 
@@ -18,8 +19,9 @@ import { Chessboard } from './chessboard2.js';
         const lines = randomPuzzle.split('\n');
         const metadata = lines[0];  // Extract the first line
         const fen = lines[1];  // Extract the second line
+        const move_sequence = lines[2];
 
-        return { metadata, fen };
+        return { metadata, fen, move_sequence};
     }
 
     function displayPuzzleInfo(info) {
@@ -89,6 +91,11 @@ import { Chessboard } from './chessboard2.js';
         const fenParts = fen.split(" ");
         return fenParts[1] === 'w' ? 'white' : 'black';
     }
+
+    
+
+    //console.log(translateMovesToPuzzleMoves(parseMoveStrings(moveString1)));
+    //console.log(translateMovesToPuzzleMoves(parseMoveStrings(moveString2)));
     
     document.addEventListener('DOMContentLoaded', () => {
         // Initial load
@@ -109,6 +116,13 @@ import { Chessboard } from './chessboard2.js';
     
         getRandomPuzzle().then(puzzle => {
             const {board, colors} = fenToBoard(puzzle.fen);
+            const initialRequest = { moveString: puzzle.move_sequence };
+            console.log(puzzle.move_sequence)
+            const result = parseMoveStringsHandler.handle(initialRequest);
+            const blackMoves = result.puzzleMovesWithFullNames.blackMoves;
+            const whiteMoves = result.puzzleMovesWithFullNames.whiteMoves;
+            console.log(whiteMoves);
+            console.log(blackMoves);
             const chessboard = new Chessboard('chessboard', board, colors, getTurnFromFEN(puzzle.fen));
     
             displayPuzzleInfo(puzzle.metadata);

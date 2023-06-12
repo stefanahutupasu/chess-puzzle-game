@@ -3,6 +3,8 @@ import { BoardState } from './boardstate.js';
 
 export class Chessboard {
     constructor(elementId, initialConfiguration, initialColors, initialTurn) {
+       
+        
         this.boardElement = document.getElementById(elementId);
         this.boardState = new BoardState(initialConfiguration, initialColors);
         this.pieces = [];
