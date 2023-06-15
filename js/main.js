@@ -1,8 +1,6 @@
-import { Chessboard } from './chessboard2.js';
-import { PuzzleMove } from './puzzlemove.js';
+import { Chessboard } from './chessboard.js';
 import { parseMoveStringsHandler} from './move_string_handler.js';
 import { ChessPuzzle } from './chess_puzzle.js';
-
 
 
     async function getRandomPuzzle() {
@@ -12,16 +10,14 @@ import { ChessPuzzle } from './chess_puzzle.js';
             }
         });
         const data = await response.text();
-        console.log(data);
+        //console.log(data);
         const puzzles = data.split(/\r?\n\r?\n\r?\n/);
-        console.log(puzzles);
+        //console.log(puzzles);
         const randomPuzzle = puzzles[Math.floor(Math.random() * puzzles.length)];
-
         const lines = randomPuzzle.split('\n');
         const metadata = lines[0];  // Extract the first line
         const fen = lines[1];  // Extract the second line
-        const move_sequence = lines[2];
-
+        const move_sequence = lines[2];  // Extract the third line
         return { metadata, fen, move_sequence};
     }
 
@@ -35,19 +31,6 @@ import { ChessPuzzle } from './chess_puzzle.js';
         infoElement.innerHTML = info;
     }
     
-
-    
-    // async function getFENFromPuzzle() {
-    //     const randomPuzzle = await getRandomPuzzle();
-    //     const puzzleLines = randomPuzzle.fen;
-    //     const FENLine = puzzleLines.find(line => line.includes('w - -') || line.includes('b - -'));
-    
-    //     return FENLine;
-    // }
-    
-    // getFENFromPuzzle().then(FEN => console.log(FEN));
-    
-
     function fenToBoard(fen) {
         const pieces = {
             'p': 'pawn',
@@ -65,11 +48,11 @@ import { ChessPuzzle } from './chess_puzzle.js';
         };
     
         const board = [];
-        const colors = []; // array to store colors
+        const colors = []; 
         const rows = fen.split(' ')[0].split('/');
         for (let row of rows) {
             const boardRow = [];
-            const colorRow = []; // row to store colors
+            const colorRow = []; 
             for (let char of row) {
                 if (isNaN(char)) { // if the character is not a number
                     boardRow.push(pieces[char]);
@@ -93,7 +76,6 @@ import { ChessPuzzle } from './chess_puzzle.js';
         return fenParts[1] === 'w' ? 'white' : 'black';
     }
 
-    
     function resetScore() {
         // Confirm with the user
         let isConfirmed = confirm("Are you sure you want to reset the score?");
@@ -104,23 +86,16 @@ import { ChessPuzzle } from './chess_puzzle.js';
             
             // Set the current score to 0
             let currentScore = 0;
-    
-            // Store the new score in localStorage
             localStorage.setItem('score', currentScore);
-            
-            // Display the updated score
             scoreElement.textContent = `Score: ${currentScore}`;
         }
     }
-    //console.log(translateMovesToPuzzleMoves(parseMoveStrings(moveString1)));
-    //console.log(translateMovesToPuzzleMoves(parseMoveStrings(moveString2)));
     
     document.addEventListener('DOMContentLoaded', () => {
         // Initial load
         const array = Array(8).fill().map(() => Array(8).fill('empty'));
         const emptyChessboard = new Chessboard('chessboard-empty', new ChessPuzzle(array, array, 'white', [], [], ''));
         loadPuzzle();
-
 
         document.getElementById('reset-score').addEventListener('click', () => {
             let sound = document.getElementById('click_sound');
@@ -133,7 +108,6 @@ import { ChessPuzzle } from './chess_puzzle.js';
             sound.play();
         });
     
-        // Add event listener to the button
         document.getElementById('generate-puzzle').addEventListener('click', loadPuzzle);
         document.getElementById('generate-puzzle').addEventListener('click', () => {
             let sound = document.getElementById('click_sound');
@@ -144,7 +118,6 @@ import { ChessPuzzle } from './chess_puzzle.js';
 
     let chessboard;
     function loadPuzzle() {
-        // Remove old chessboard
         const chessboardElement = document.getElementById('chessboard');
         while (chessboardElement.firstChild) {
             chessboardElement.firstChild.remove();
@@ -158,7 +131,6 @@ import { ChessPuzzle } from './chess_puzzle.js';
             const blackMoves = result.puzzleMovesWithFullNames.blackMoves;
             const whiteMoves = result.puzzleMovesWithFullNames.whiteMoves;
 
-            // Create ChessPuzzle instance
             const chessPuzzle = new ChessPuzzle(board, colors, turn, blackMoves, whiteMoves, puzzle.metadata);
             console.log(chessPuzzle);
             console.log(whiteMoves);
@@ -166,16 +138,11 @@ import { ChessPuzzle } from './chess_puzzle.js';
             if(chessboard) { chessboard.cleanup();}
             chessboard = new Chessboard('chessboard', chessPuzzle);
             
-
             displayPuzzleInfo(puzzle.metadata);
             document.getElementById('sparkles-left').style.display = 'none';
             document.getElementById('sparkles-right').style.display = 'none';
             let currentScore = parseInt(localStorage.getItem('score')) || 0;
-
-            // Get the score element
             let scoreElement = document.getElementById('score');
-            
-            // Set the initial score
             scoreElement.textContent = `Score: ${currentScore}`;
             
         });

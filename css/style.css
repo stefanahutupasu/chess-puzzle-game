@@ -5,10 +5,9 @@ body {
     height: 100vh;
     margin: 0;
     background-color: #FF8484;
-    flex-direction: row; /* Change the direction to row */
-    flex-wrap: wrap; /* If the screen is too small, move the elements to a new line */
+    flex-direction: row; 
+    flex-wrap: wrap; 
 }
-
 
 body, div, img {
     margin: 0;
@@ -16,16 +15,15 @@ body, div, img {
     box-sizing: border-box;
 }
 
-
 #chessboard {
     position: fixed;
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     gap: 0;
-    width: 72vh; /* Adjust size as needed */
-    height: 72vh; /* Adjust size as needed */
-    border-radius: 15px; /* Adjust as needed */
-    box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.4); /* Adjust as needed */
+    width: 72vh; 
+    height: 72vh; 
+    border-radius: 15px;
+    box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.4); 
     overflow: hidden; /* To ensure the inner squares don't spill over the rounded corners */
     
 }
@@ -35,10 +33,10 @@ body, div, img {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     gap: 0;
-    width: 72vh; /* Adjust size as needed */
-    height: 72vh; /* Adjust size as needed */
-    border-radius: 15px; /* Adjust as needed */
-    box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.4); /* Adjust as needed */
+    width: 72vh; 
+    height: 72vh; 
+    border-radius: 15px; 
+    box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.4); 
     overflow: hidden; /* To ensure the inner squares don't spill over the rounded corners */
     z-index: -20;
     
@@ -47,17 +45,14 @@ body, div, img {
 button.promotion-button, .square, .square-fake {
     width: 100%;
     height: 100%;
-    min-width: 9vh;  /* adjust this value based on your design */
+    min-width: 9vh;
     min-height: 9vh;
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
     user-select: none;
-  
 }
-
-
 
 button.promotion-button {
     border: 0;
@@ -73,13 +68,12 @@ button.dark, .square.dark,  .square-fake.dark {
 }
 
 .square.light.highlight {
-    background-color: #FFC914; /* Semi-transparent yellow */
+    background-color: #FFC914; /
 }
 
 .square.dark.highlight {
-    background-color: #EF8354; /* Semi-transparent yellow */
+    background-color: #EF8354; 
 }
-
 
 .piece {
     position: absolute; 
@@ -90,7 +84,6 @@ button.dark, .square.dark,  .square-fake.dark {
     object-fit: contain;
     user-select: none;
     cursor: pointer;
-    
 }
 
 .piece.white {
@@ -101,43 +94,27 @@ button.dark, .square.dark,  .square-fake.dark {
     filter: invert(10%) sepia(21%) saturate(6820%) hue-rotate(241deg) brightness(89%) contrast(101%) drop-shadow(0 1px 5px rgba(0, 0, 0, 0.3));
 }
 
-
-
-
-
-
-
-
 .placeholder {
     visibility: hidden;
     width: 7vh;
     height: 7vh;
 }
 
-
 .invisible {
     visibility: hidden;
 }
 
-
 .promotion-popup {
-    position: relative;
-    
+    position: relative;  
     left: 45vh;
-
     background: linear-gradient(to bottom, #4DCCBD, #2374AB);
     padding: 1vh;
-    border-radius: 15px; /* Adjust as needed */
-    box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.4); /* Adjust as needed */
+    border-radius: 15px; 
+    box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.4); 
     z-index: 10;
     display: flex;
     flex-direction: column;
-
-    
 }
-
-
-
 
 .promotion-popup button {
     margin: 10px 0;
@@ -149,21 +126,18 @@ button.dark, .square.dark,  .square-fake.dark {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 4vh;  /* Adjust as needed */
-    font-size: 3vh;  /* Adjust as needed */
+    height: 4vh;  
+    font-size: 3vh;  
     font-family: 'Raleway', sans-serif;
     top: 3vh;
-    color: #D6FFF6;  /* Adjust as needed */
+    color: #D6FFF6;  
     font-weight: lighter;
-    
     z-index: 10;
     user-select: none;
     padding: 1vh;
-   
-    border-radius: 10px; /* Adjust as needed */
-    box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.3); /* Adjust as needed */
+    border-radius: 10px; 
+    box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.3); 
     background: linear-gradient( #4DCCBD, #2374AB);
-    
 }
 
 #info-display {
@@ -172,36 +146,30 @@ button.dark, .square.dark,  .square-fake.dark {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 4vh;  /* Adjust as needed */
-    font-size: 3vh;  /* Adjust as needed */
+    height: 4vh;  
+    font-size: 3vh; 
     font-family: 'Raleway', sans-serif;
     bottom: 3vh;
-    color: #D6FFF6;  /* Adjust as needed */
+    color: #D6FFF6;  
     font-weight: lighter;
-    
     z-index: 10;
     user-select: none;
     padding: 1vh;
-   
-    border-radius: 10px; /* Adjust as needed */
-    box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.3); /* Adjust as needed */
+    border-radius: 10px; 
+    box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.3); 
     background: linear-gradient( #4DCCBD, #2374AB);
-    
 }
 
-
 #generate-puzzle {
-
     width:35vh;
     position: fixed;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 5vh;  /* Adjust as needed */
-    font-size: 3vh;  /* Adjust as needed */
+    height: 5vh;  
+    font-size: 3vh;  
     font-family: 'Raleway', sans-serif;
-   
-    color: #D6FFF6;  /* Adjust as needed */
+    color: #D6FFF6;  
     font-weight: lighter;
     top: 14vh;
     left: 6vh;
@@ -209,30 +177,26 @@ button.dark, .square.dark,  .square-fake.dark {
     user-select: none;
     padding: 1vh;
     border: #2374AB;
-    border-radius: 10px; /* Adjust as needed */
-    box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.3); /* Adjust as needed */
+    border-radius: 10px;
+    box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.3);
     background: linear-gradient( #4DCCBD, #2374AB);
-    
 }
 
-
 #generate-puzzle:hover, #generate-hint:hover, #reset-score:hover {
-    background: linear-gradient( #86fff1, #5fbfff);; /* Green */
+    background: linear-gradient( #86fff1, #5fbfff);
     color: #231651;
 }
 
 #generate-hint {
-
     width:35vh;
     position: fixed;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 5vh;  /* Adjust as needed */
-    font-size: 3vh;  /* Adjust as needed */
+    height: 5vh;  
+    font-size: 3vh;  
     font-family: 'Raleway', sans-serif;
-   
-    color: #D6FFF6;  /* Adjust as needed */
+    color: #D6FFF6;  
     font-weight: lighter;
     top: 21vh;
     left: 6vh;
@@ -240,24 +204,21 @@ button.dark, .square.dark,  .square-fake.dark {
     user-select: none;
     padding: 1vh;
     border: #2374AB;
-    border-radius: 10px; /* Adjust as needed */
-    box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.3); /* Adjust as needed */
+    border-radius: 10px; 
+    box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.3); 
     background: linear-gradient( #4DCCBD, #2374AB);
-    
 }
 
 #reset-score {
-
     width:35vh;
     position: fixed;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 5vh;  /* Adjust as needed */
-    font-size: 3vh;  /* Adjust as needed */
+    height: 5vh;  
+    font-size: 3vh;  
     font-family: 'Raleway', sans-serif;
-   
-    color: #D6FFF6;  /* Adjust as needed */
+    color: #D6FFF6;  
     font-weight: lighter;
     top: 28vh;
     left: 6vh;
@@ -265,37 +226,30 @@ button.dark, .square.dark,  .square-fake.dark {
     user-select: none;
     padding: 1vh;
     border: #2374AB;
-    border-radius: 10px; /* Adjust as needed */
-    box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.3); /* Adjust as needed */
+    border-radius: 10px; 
+    box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.3); 
     background: linear-gradient( #4DCCBD, #2374AB);
-    
 }
 
 #score {
-
     width:35vh;
     position: fixed;
     display: flex;
     justify-content: left;
     align-items: center;
-    height: 5vh;  /* Adjust as needed */
-    font-size: 4vh;  /* Adjust as needed */
+    height: 5vh;  
+    font-size: 4vh;  
     font-family: 'Raleway', sans-serif;
     font-weight: bolder;
-    color: #231651;  /* Adjust as needed */
-
+    color: #231651;  
     top:5vh;
     left: 6vh;
     z-index: 10;
     user-select: none;
     padding: 1vh;
-  
-    border-radius: 10px; /* Adjust as needed */
-   
+    border-radius: 10px; 
     background: none;
-    
 }
-
 
 .modal {
     opacity: 0;
@@ -303,7 +257,6 @@ button.dark, .square.dark,  .square-fake.dark {
     display: none;
     position: fixed;
     z-index: 1;
-    
     left: 0;
     top: 0;
     width: 100vw;
@@ -317,18 +270,18 @@ button.dark, .square.dark,  .square-fake.dark {
 .modal-content {
     position: relative;
     top: 42vh;
-    color: #D6FFF6;  /* Adjust as needed */
+    color: #D6FFF6;  
     background: linear-gradient( #4DCCBD, #2374AB);
     display: flex;
     justify-content: center;
     align-items: center;
     margin: auto;
     padding: 20px;
-    font-size: 3vh;  /* Adjust as needed */
+    font-size: 3vh;  
     font-family: 'Raleway', sans-serif;
     width: 80%;
-    border-radius: 10px; /* Adjust as needed */
-    box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.3); /* Adjust as needed */
+    border-radius: 10px; 
+    box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.3); 
     user-select: none;
 }
 
@@ -336,7 +289,7 @@ button.dark, .square.dark,  .square-fake.dark {
     background: url('./sparkle.gif') no-repeat center center;
     background-size: 100%;
     width: 10vh;
-    height: 10vh;  /* Change according to your GIF size */
+    height: 10vh;  
     position: absolute;
     display: none;
     filter: brightness(0) saturate(100%) invert(88%) sepia(48%) saturate(152%) hue-rotate(87deg) brightness(104%) contrast(105%);

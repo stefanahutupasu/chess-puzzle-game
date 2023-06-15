@@ -18,14 +18,9 @@ export class BoardState {
     }
 
     movePiece(fromRow, fromCol, toRow, toCol) {
-        //console.log(this.configuration);
-        //console.log(this.colors);
-        console.log('coords', fromRow, fromCol, toRow, toCol);
+        //console.log('coords', fromRow, fromCol, toRow, toCol);
         this.configuration[toRow][toCol] = this.configuration[fromRow][fromCol];
-        //this.configuration[fromRow][fromCol] = 'empty';
         this.colors[toRow][toCol] = this.colors[fromRow][fromCol];
-        //this.colors[fromRow][fromCol] = 'empty';
-
         this.emptySquare(fromRow, fromCol);
     }
 
