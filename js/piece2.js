@@ -49,7 +49,7 @@ export class Piece {
         }
     }
 
-    isValidMove(toSquare, boardState, initialColors, lastMove) {
+    isValidMove(toSquare, boardState, lastMove) {
         const fromSquare = {row: parseInt(this.element.parentElement.dataset.row), col: parseInt(this.element.parentElement.dataset.col)};
         return this.moveStrategy.isValidMove(fromSquare, toSquare, boardState.configuration, boardState.colors, lastMove);
     }
@@ -81,6 +81,8 @@ export class Piece {
         this.fromSquare = this.element.parentElement.dataset;
         
         // Calculate possible moves and highlight squares
+        let sound = document.getElementById('click_sound');
+        sound.play();
         this.highlightPossibleMoves();
     }
     

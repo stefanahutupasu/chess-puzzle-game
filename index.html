@@ -3,7 +3,7 @@
 
 <head>
   <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" rel="stylesheet">
-
+  <link href="./favicon.ico" rel="icon" type="image/x-icon" />
   <meta name="description" content="Webpage description goes here" />
   <meta charset="utf-8">
   <title>Chess Puzzle</title>
@@ -16,11 +16,25 @@
 </head>
 
 <body>
+<audio id="click_sound" src="click.wav" preload="auto"></audio>
+<audio id="puzzle_complete_sound" src="puzzle_complete_sound.mp3" preload="auto"></audio>
 <div id="chessboard-empty"></div>
 <h1 id="turn-display"></h1> 
 
 <div id="chessboard"></div>
 <button id="generate-puzzle">Generate New Puzzle</button>
+<button id="generate-hint">Show Hint</button>
+<button id="reset-score">Reset Score</button>
+<div id="score">Score: </div>
+
+<div id="modal" class="modal">
+  <div class="modal-content">
+      <p>There's a better move available.</p>
+  </div>
+</div>
+
+<div id="sparkles-left" class="sparkles"></div>
+<div id="sparkles-right" class="sparkles"></div>
 
 
 <!-- <script src="js/script.js"></script> -->

@@ -1,50 +1,45 @@
+// Piece.js
+import { KnightMoveStrategy, PawnMoveStrategy, RookMoveStrategy, BishopMoveStrategy, QueenMoveStrategy, KingMoveStrategy } from './movement.js';
+
 export class Piece {
     constructor(type, color, row, col) {
         this.type = type;
         this.color = color;
-        this.clone = null;
         this.square = null;
-        this.invisible = false;
-
-        const img = document.createElement('img');
-        img.src = `img/${type}.png`;
-        img.id = `${type}-${row}-${col}`;  
-        img.classList.add('piece', color);
-        img.addEventListener('mousedown', this.handleMousedown.bind(this));
-        document.addEventListener('mousemove', this.handleMousemove.bind(this));
-        this.element = img;
+        this.setMoveStrategy(type);
     }
 
-    handleMousedown(e) {
-        e.preventDefault();
-        this.clone = this.element.cloneNode(true);
-        this.clone.style.position = "fixed";
-        this.clone.style.pointerEvents = "none";
-        this.clone.id = 'clone';
-        document.body.appendChild(this.clone);
-
-        this.square = this.element.parentElement;
-        this.element.classList.add('invisible');
-        this.moveClone(e);
+    setMoveStrategy(type) {
+        switch (type) {
+            case 'pawn':
+                this.moveStrategy = new PawnMoveStrategy(this.color);
+                break;
+            case 'rook':
+                this.moveStrategy = new RookMoveStrategy(this.color);
+                break;
+            case 'knight':
+                this.moveStrategy = new KnightMoveStrategy(this.color);
+                break;
+            case 'bishop':
+                this.moveStrategy = new BishopMoveStrategy(this.color);
+                break;
+            case 'queen':
+                this.moveStrategy = new QueenMoveStrategy(this.color);
+                break;
+            case 'king':
+                this.moveStrategy = new KingMoveStrategy(this.color);
+                break;
+            default:
+                this.moveStrategy = new PawnMoveStrategy(this.color);
+                break;
+        }
     }
 
-    handleMousemove(e) {
-        if (!this.clone) return;
-        this.moveClone(e);
+    isValidMove(toSquare, initialConfiguration, initialColors, lastMove) {
+        const fromSquare = {row: parseInt(this.element.parentElement.dataset.row), col: parseInt(this.element.parentElement.dataset.col)};
+        return this.moveStrategy.isValidMove(fromSquare, toSquare, initialConfiguration, initialColors, lastMove);
     }
 
-    moveClone(e) {
-        this.clone.style.left = (e.clientX - this.clone.offsetWidth / 2) + 'px';
-        this.clone.style.top = (e.clientY - this.clone.offsetHeight / 2) + 'px';
-    }
-
-    deselect() {
-        if (!this.element || !this.clone) return;
-        this.element.style.position = 'static';
-        this.square.appendChild(this.element);
-        document.body.removeChild(this.clone);
-        this.clone = null;
-        this.square = null;
-        this.element.classList.remove('invisible');
-    }
+    //... Other game-logic methods
 }
+

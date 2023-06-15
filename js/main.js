@@ -1,11 +1,12 @@
 import { Chessboard } from './chessboard2.js';
 import { PuzzleMove } from './puzzlemove.js';
 import { parseMoveStringsHandler} from './move_string_handler.js';
+import { ChessPuzzle } from './chess_puzzle.js';
 
 
 
     async function getRandomPuzzle() {
-        const response = await fetch('puzzles.txt', {
+        const response = await fetch('puzzles2.txt', {
             headers: {
                 'Cache-Control': 'no-cache'
             }
@@ -93,39 +94,90 @@ import { parseMoveStringsHandler} from './move_string_handler.js';
     }
 
     
-
+    function resetScore() {
+        // Confirm with the user
+        let isConfirmed = confirm("Are you sure you want to reset the score?");
+        
+        // If the user clicks "OK", then reset the score
+        if (isConfirmed) {
+            let scoreElement = document.getElementById('score');
+            
+            // Set the current score to 0
+            let currentScore = 0;
+    
+            // Store the new score in localStorage
+            localStorage.setItem('score', currentScore);
+            
+            // Display the updated score
+            scoreElement.textContent = `Score: ${currentScore}`;
+        }
+    }
     //console.log(translateMovesToPuzzleMoves(parseMoveStrings(moveString1)));
     //console.log(translateMovesToPuzzleMoves(parseMoveStrings(moveString2)));
     
     document.addEventListener('DOMContentLoaded', () => {
         // Initial load
         const array = Array(8).fill().map(() => Array(8).fill('empty'));
-        const emptyChessboard = new Chessboard('chessboard-empty', array, array, 'white');
+        const emptyChessboard = new Chessboard('chessboard-empty', new ChessPuzzle(array, array, 'white', [], [], ''));
         loadPuzzle();
+
+
+        document.getElementById('reset-score').addEventListener('click', () => {
+            let sound = document.getElementById('click_sound');
+            sound.play();
+            resetScore.bind(this)();
+        });
+
+        document.getElementById('generate-hint').addEventListener('click', () => {
+            let sound = document.getElementById('click_sound');
+            sound.play();
+        });
     
         // Add event listener to the button
         document.getElementById('generate-puzzle').addEventListener('click', loadPuzzle);
+        document.getElementById('generate-puzzle').addEventListener('click', () => {
+            let sound = document.getElementById('click_sound');
+            sound.play();
+        });
     });
     
+
+    let chessboard;
     function loadPuzzle() {
         // Remove old chessboard
         const chessboardElement = document.getElementById('chessboard');
         while (chessboardElement.firstChild) {
             chessboardElement.firstChild.remove();
         }
-    
+        
         getRandomPuzzle().then(puzzle => {
             const {board, colors} = fenToBoard(puzzle.fen);
+            const turn = getTurnFromFEN(puzzle.fen);
             const initialRequest = { moveString: puzzle.move_sequence };
-            console.log(puzzle.move_sequence)
             const result = parseMoveStringsHandler.handle(initialRequest);
             const blackMoves = result.puzzleMovesWithFullNames.blackMoves;
             const whiteMoves = result.puzzleMovesWithFullNames.whiteMoves;
+
+            // Create ChessPuzzle instance
+            const chessPuzzle = new ChessPuzzle(board, colors, turn, blackMoves, whiteMoves, puzzle.metadata);
+            console.log(chessPuzzle);
             console.log(whiteMoves);
             console.log(blackMoves);
-            const chessboard = new Chessboard('chessboard', board, colors, getTurnFromFEN(puzzle.fen));
-    
+            if(chessboard) { chessboard.cleanup();}
+            chessboard = new Chessboard('chessboard', chessPuzzle);
+            
+
             displayPuzzleInfo(puzzle.metadata);
+            document.getElementById('sparkles-left').style.display = 'none';
+            document.getElementById('sparkles-right').style.display = 'none';
+            let currentScore = parseInt(localStorage.getItem('score')) || 0;
+
+            // Get the score element
+            let scoreElement = document.getElementById('score');
+            
+            // Set the initial score
+            scoreElement.textContent = `Score: ${currentScore}`;
+            
         });
     }
     
